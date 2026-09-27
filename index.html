@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Under Construction</title>
+  <title>Alex Bellina</title>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <style>
     * {
       margin: 0;
@@ -18,13 +19,13 @@
       justify-content: center;
       align-items: center;
       gap: 1.75rem;
-      background: #000000;
+      background: #07111f;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, 'Helvetica Neue', Arial, sans-serif;
-      color: #fff;
+      color: #ddeaf7;
     }
 
     .glow-text {
-      font-size: clamp(1.75rem, 5vw, 3rem);
+      font-size: clamp(2rem, 6vw, 3.5rem);
       font-weight: 700;
       letter-spacing: -0.02em;
       text-align: center;
@@ -32,44 +33,60 @@
       animation: glow 4s ease-in-out infinite;
     }
 
-    .subtext {
-      font-size: 0.9rem;
-      font-weight: 400;
-      color: #aaa;
-      letter-spacing: 0.02em;
+    .tagline {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #7a95b0;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
       text-align: center;
     }
 
-    .progress {
-      width: min(220px, 60vw);
-      height: 2px;
-      background: #222;
-      border-radius: 999px;
-      overflow: hidden;
+    .blurb {
+      font-size: 1rem;
+      font-weight: 400;
+      color: #aec8e0;
+      line-height: 1.7;
+      text-align: center;
+      max-width: min(520px, 88vw);
     }
 
-    .progress .bar {
-      width: 40%;
-      height: 100%;
-      background: #fff;
-      border-radius: 999px;
-      animation: slide 4s ease-in-out infinite;
+    .resume-btn {
+      display: inline-block;
+      margin-top: 0.25rem;
+      padding: 0.55rem 1.4rem;
+      border: 1px solid #2e4a6a;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: #aec8e0;
+      text-decoration: none;
+      background: rgba(14, 40, 70, 0.45);
+      cursor: pointer;
+      transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+    }
+
+    .resume-btn:hover {
+      border-color: #6aa0cc;
+      color: #ddeaf7;
+      background: rgba(30, 70, 110, 0.4);
     }
 
     @keyframes glow {
       0%, 100% {
         opacity: 0.4;
         text-shadow:
-          0 0 2px rgba(255, 255, 255, 0.3),
-          0 0 6px rgba(255, 255, 255, 0.2);
+          0 0 2px rgba(140, 190, 240, 0.3),
+          0 0 6px rgba(100, 160, 220, 0.2);
       }
       50% {
         opacity: 1;
         text-shadow:
-          0 0 6px rgba(255, 255, 255, 0.8),
-          0 0 14px rgba(255, 255, 255, 0.5),
-          0 0 28px rgba(255, 255, 255, 0.3),
-          0 0 48px rgba(255, 255, 255, 0.15);
+          0 0 6px rgba(180, 220, 255, 0.8),
+          0 0 14px rgba(120, 180, 240, 0.5),
+          0 0 28px rgba(80, 140, 210, 0.3),
+          0 0 48px rgba(60, 110, 180, 0.15);
       }
     }
 
@@ -116,13 +133,13 @@
 
     .contact-item {
       font-size: 1rem;
-      color: #ccc;
+      color: #aec8e0;
       text-decoration: none;
       transition: color 0.2s ease;
     }
 
     .contact-item:hover {
-      color: #fff;
+      color: #ddeaf7;
     }
 
     .image-panel {
@@ -151,7 +168,7 @@
       max-width: 100%;
       max-height: 70vh;
       border-radius: 8px;
-      box-shadow: 0 8px 30px rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 30px rgba(80, 140, 210, 0.2);
     }
 
     .footer {
@@ -169,41 +186,192 @@
     }
 
     .footer a {
-      color: #aaa;
+      color: #7a95b0;
       text-decoration: none;
       transition: color 0.2s ease;
       cursor: pointer;
     }
 
     .footer a:hover {
-      color: #fff;
+      color: #ddeaf7;
     }
 
-    @keyframes slide {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(350%); }
+    .divider {
+      width: min(220px, 60vw);
+      height: 1px;
+      background: linear-gradient(to right, transparent, #1e3a58, transparent);
+    }
+
+    /* Modal overlay */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 10, 20, 0.75);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      z-index: 100;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal {
+      background: #0c1e33;
+      border: 1px solid #1e3a58;
+      border-radius: 12px;
+      padding: 2rem 2.25rem;
+      width: min(400px, 90vw);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.25rem;
+      transform: translateY(16px);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .modal-overlay.open .modal {
+      transform: translateY(0);
+    }
+
+    .modal h2 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: #ddeaf7;
+    }
+
+    .modal p {
+      font-size: 0.85rem;
+      color: #7a95b0;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .modal input[type="text"] {
+      width: 100%;
+      padding: 0.6rem 0.9rem;
+      background: #07111f;
+      border: 1px solid #1e3a58;
+      border-radius: 6px;
+      color: #ddeaf7;
+      font-size: 0.9rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .modal input[type="text"]:focus {
+      border-color: #4a80b0;
+    }
+
+    .modal input[type="text"]::placeholder {
+      color: #3a5570;
+    }
+
+    .modal-submit {
+      width: 100%;
+      padding: 0.6rem 1rem;
+      background: rgba(14, 40, 70, 0.6);
+      border: 1px solid #2e4a6a;
+      border-radius: 6px;
+      color: #aec8e0;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      font-family: inherit;
+      cursor: pointer;
+      transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+    }
+
+    .modal-submit:hover:not(:disabled) {
+      border-color: #6aa0cc;
+      color: #ddeaf7;
+      background: rgba(30, 70, 110, 0.5);
+    }
+
+    .modal-submit:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .modal-error {
+      font-size: 0.8rem;
+      color: #e07a7a;
+      text-align: center;
+      min-height: 1.1em;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 0.75rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      color: #3a5570;
+      font-size: 1.25rem;
+      cursor: pointer;
+      line-height: 1;
+      transition: color 0.15s ease;
+    }
+
+    .modal-close:hover {
+      color: #7a95b0;
+    }
+
+    .modal-inner {
+      position: relative;
+      width: 100%;
+    }
+
+    .cf-turnstile {
+      display: flex;
+      justify-content: center;
     }
   </style>
 </head>
 <body>
   <main class="hero" id="hero">
-    <h1 class="glow-text">Website is<br>under construction</h1>
-    <p class="subtext">I'm working on something new. Check back shortly.</p>
-    <div class="progress"><div class="bar"></div></div>
+    <h1 class="glow-text">Alex Bellina</h1>
+    <p class="tagline">Computer Science &nbsp;·&nbsp; Systems &amp; Automation</p>
+    <div class="divider"></div>
+    <p class="blurb">I graduated with a B.S. in Computer Science in May 2023 and have been building my path since. I'm an analytical thinker who finds real satisfaction in organizing systems, writing scripts, and configuring things correctly — the kind of work I can commit to fully. I'm looking for a role where I can solve meaningful problems with depth and discipline, and bring genuine effort to whatever I'm working on.</p>
+    <button class="resume-btn" id="resumeBtn">Download Résumé</button>
   </main>
 
   <section class="contact-panel" id="contactPanel">
     <h2>Get in touch</h2>
-    <a href="tel:+13144747714" class="contact-item">+13144747714</a>
-    <a href="mailto:alexbellina@alexbellina.com" class="contact-item">alexbellina@alexbellina.com</a>
+    <a href="tel:+13144747714" class="contact-item">Call/Text:  +13144747714</a>
+    <a href="mailto:alexbellina@alexbellina.com" class="contact-item">Email:  alexbellina@alexbellina.com</a>
   </section>
 
   <section class="image-panel" id="imagePanel">
     <img src="images/IMG_0376.jpeg" alt="Gallery image">
   </section>
 
+  <!-- Resume download modal -->
+  <div class="modal-overlay" id="resumeModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <div class="modal-inner">
+        <button class="modal-close" id="modalClose" aria-label="Close">&times;</button>
+      </div>
+      <h2 id="modalTitle">Download Résumé</h2>
+      <p>Enter the passphrase to continue.</p>
+      <input type="text" id="passphraseInput" placeholder="Passphrase" autocomplete="off" spellcheck="false" />
+      <div class="cf-turnstile" data-sitekey="0x4AAAAAAFFc1tdE6Axh7jpy" data-theme="dark"></div>
+      <p class="modal-error" id="modalError" aria-live="polite"></p>
+      <button class="modal-submit" id="modalSubmit">Download</button>
+    </div>
+  </div>
+
   <footer class="footer">
-    <a>About</a>
+    <a id="homeLink">Home</a>
     <a id="imagesLink">Images</a>
     <a id="contactLink">Contact</a>
     <a>alexbellina.com</a>
@@ -215,11 +383,24 @@
     const contactLink = document.getElementById('contactLink');
     const imagePanel = document.getElementById('imagePanel');
     const imagesLink = document.getElementById('imagesLink');
+    const homeLink = document.getElementById('homeLink');
+
+    const resumeBtn = document.getElementById('resumeBtn');
+    const resumeModal = document.getElementById('resumeModal');
+    const modalClose = document.getElementById('modalClose');
+    const modalSubmit = document.getElementById('modalSubmit');
+    const passphraseInput = document.getElementById('passphraseInput');
+    const modalError = document.getElementById('modalError');
 
     function closeAllPanels() {
       contactPanel.classList.remove('open');
       imagePanel.classList.remove('open');
+      hero.classList.remove('hidden');
     }
+
+    homeLink.addEventListener('click', () => {
+      closeAllPanels();
+    });
 
     contactLink.addEventListener('click', () => {
       const wasOpen = contactPanel.classList.contains('open');
@@ -236,8 +417,82 @@
       imagePanel.classList.toggle('open', open);
       hero.classList.toggle('hidden', open);
     });
+
+    resumeBtn.addEventListener('click', () => {
+      resumeModal.classList.add('open');
+      passphraseInput.focus();
+    });
+
+    function closeModal() {
+      resumeModal.classList.remove('open');
+      passphraseInput.value = '';
+      modalError.textContent = '';
+      modalSubmit.disabled = false;
+      modalSubmit.textContent = 'Download';
+    }
+
+    modalClose.addEventListener('click', closeModal);
+
+    resumeModal.addEventListener('click', (e) => {
+      if (e.target === resumeModal) closeModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && resumeModal.classList.contains('open')) closeModal();
+    });
+
+    passphraseInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') modalSubmit.click();
+    });
+
+    modalSubmit.addEventListener('click', async () => {
+      const passphrase = passphraseInput.value.trim();
+      if (!passphrase) {
+        modalError.textContent = 'Please enter the passphrase.';
+        return;
+      }
+
+      const turnstileInput = document.querySelector('[name="cf-turnstile-response"]');
+      const turnstileToken = turnstileInput?.value;
+      if (!turnstileToken) {
+        modalError.textContent = 'Please complete the security check.';
+        return;
+      }
+
+      modalError.textContent = '';
+      modalSubmit.disabled = true;
+      modalSubmit.textContent = 'Verifying…';
+
+      try {
+        const res = await fetch('/resume', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ passphrase, turnstileToken }),
+        });
+
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          modalError.textContent = data.error || 'Something went wrong. Try again.';
+          modalSubmit.disabled = false;
+          modalSubmit.textContent = 'Download';
+          if (window.turnstile) window.turnstile.reset();
+          return;
+        }
+
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'Alex-Bellina-Resume.pdf';
+        a.click();
+        URL.revokeObjectURL(url);
+        closeModal();
+      } catch {
+        modalError.textContent = 'Network error. Check your connection and try again.';
+        modalSubmit.disabled = false;
+        modalSubmit.textContent = 'Download';
+      }
+    });
   </script>
 </body>
 </html>
-
-
