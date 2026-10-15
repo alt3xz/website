@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — Alex Bellina</title>
+  <link rel="icon" href="/favicon.ico">
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      background: #07111f;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, 'Helvetica Neue', Arial, sans-serif;
+      color: #ddeaf7;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .brand-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: #ddeaf7;
+      text-decoration: none;
+    }
+
+    .brand-name:hover {
+      color: #aec8e0;
+    }
+
+    .brand-sub {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #7a95b0;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .card {
+      background: #0c1e33;
+      border: 1px solid #1e3a58;
+      border-radius: 14px;
+      padding: 2.25rem 2.5rem;
+      width: min(380px, 90vw);
+      display: flex;
+      flex-direction: column;
+      gap: 1.35rem;
+    }
+
+    .card-header {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .card-header h1 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #ddeaf7;
+    }
+
+    .card-header p {
+      font-size: 0.85rem;
+      color: #7a95b0;
+      line-height: 1.5;
+    }
+
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, #1e3a58, transparent);
+    }
+
+    label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: #7a95b0;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 0.45rem;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 0.65rem 0.9rem;
+      background: #07111f;
+      border: 1px solid #1e3a58;
+      border-radius: 6px;
+      color: #ddeaf7;
+      font-size: 0.95rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+      border-color: #4a80b0;
+      box-shadow: 0 0 0 3px rgba(74, 128, 176, 0.12);
+    }
+
+    input[type="text"]::placeholder,
+    input[type="password"]::placeholder {
+      color: #2e4a6a;
+    }
+
+    .cf-turnstile {
+      display: flex;
+      justify-content: center;
+    }
+
+    .error-msg {
+      font-size: 0.8rem;
+      color: #e07a7a;
+      text-align: center;
+      min-height: 1em;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      background: rgba(14, 40, 70, 0.6);
+      border: 1px solid #2e4a6a;
+      border-radius: 6px;
+      color: #aec8e0;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      font-family: inherit;
+      cursor: pointer;
+      transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+    }
+
+    .submit-btn:hover:not(:disabled) {
+      border-color: #6aa0cc;
+      color: #ddeaf7;
+      background: rgba(30, 70, 110, 0.5);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .back-link {
+      font-size: 0.8rem;
+      color: #7a95b0;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .back-link:hover {
+      color: #ddeaf7;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="brand">
+    <a href="/" class="brand-name">Alex Bellina</a>
+    <span class="brand-sub">Resume Access</span>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h1>Download Résumé</h1>
+      <p>Enter the passphrase to continue.</p>
+    </div>
+    <div class="divider"></div>
+    <div>
+      <label for="username">Username</label>
+      <input type="text" id="username" placeholder="Enter username" autocomplete="username" spellcheck="false" />
+    </div>
+    <div>
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Enter password" autocomplete="current-password" />
+    </div>
+    <div class="cf-turnstile" data-sitekey="YOUR_TURNSTILE_SITE_KEY" data-theme="dark"></div>
+    <p class="error-msg" id="errorMsg" aria-live="polite"></p>
+    <button class="submit-btn" id="submitBtn">Download</button>
+  </div>
+
+  <a href="/" class="back-link">← Back to home</a>
+
+  <script>
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const submitBtn = document.getElementById('submitBtn');
+    const errorMsg = document.getElementById('errorMsg');
+
+    passwordInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') submitBtn.click();
+    });
+
+    submitBtn.addEventListener('click', async () => {
+      const username = usernameInput.value.trim();
+      const password = passwordInput.value;
+      if (!username || !password) {
+        errorMsg.textContent = 'Please enter your username and password.';
+        return;
+      }
+
+      const turnstileInput = document.querySelector('[name="cf-turnstile-response"]');
+      const turnstileToken = turnstileInput?.value;
+      if (!turnstileToken) {
+        errorMsg.textContent = 'Please complete the security check.';
+        return;
+      }
+
+      errorMsg.textContent = '';
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Verifying…';
+
+      try {
+        const res = await fetch('/resume', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password, turnstileToken }),
+        });
+
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          errorMsg.textContent = data.error || 'Something went wrong. Try again.';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Download';
+          if (window.turnstile) window.turnstile.reset();
+          return;
+        }
+
+        submitBtn.textContent = 'Downloading…';
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'Alex-Bellina-Resume.pdf';
+        a.click();
+        URL.revokeObjectURL(url);
+        submitBtn.textContent = 'Downloaded ✓';
+      } catch {
+        errorMsg.textContent = 'Network error. Check your connection and try again.';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Download';
+      }
+    });
+  </script>
+</body>
+</html>
